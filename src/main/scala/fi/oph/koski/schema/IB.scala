@@ -146,17 +146,18 @@ trait PreIBKurssi extends Koulutusmoduuli
 
 @Description("IB-lukion kurssin tunnistetiedot")
 case class IBKurssi(
-  @KoodistoUri("ibkurssit") // TODO: pystyykö näitä edes koodittamaan?
   @OksaUri("tmpOKSAID873", "kurssi")
-  tunniste: Koodistokoodiviite,
+  tunniste: PaikallinenKoodi,
   pakollinen: Boolean = true,
   override val laajuus: Option[LaajuusKursseissa]
-) extends KoodistostaLöytyväKoulutusmoduuli with Valinnaisuus with PreIBKurssi
+) extends Koulutusmoduuli with Valinnaisuus with PreIBKurssi {
+  def nimi: LocalizedString = tunniste.nimi
+}
 
 case class IBKurssinArviointi(
   arvosana: Koodistokoodiviite,
   @KoodistoUri("effortasteikkoib")
-  effort: Koodistokoodiviite,
+  effort: Option[Koodistokoodiviite] = None,
   @Description("Päivämäärä, jolloin arviointi on annettu. Muoto YYYY-MM-DD")
   päivä: LocalDate
 ) extends IBArviointi with ArviointiPäivämäärällä
