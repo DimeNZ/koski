@@ -78,10 +78,12 @@ object ExamplesIB {
     })
   )
 
-  def ibAineSuoritus(oppiaine: IBOppiaine, arvosana: String) = IBOppiaineenSuoritus(
+  def ibAineSuoritus(oppiaine: IBOppiaine, arvosana: String, kurssit: List[(IBKurssi, String, String)] = Nil) = IBOppiaineenSuoritus(
     koulutusmoduuli = oppiaine,
     tila = tilaValmis,
-    osasuoritukset = None,
+    osasuoritukset = Some(kurssit.map { case (kurssi, kurssinArvosana, effort) =>
+      IBKurssinSuoritus(koulutusmoduuli = kurssi, tila = tilaValmis, arviointi = ibKurssinArviointi(kurssinArvosana, effort))
+    }),
     arviointi = ibArviointi(arvosana)
   )
 
@@ -107,6 +109,14 @@ object ExamplesIB {
   def ibArviointi(arvosana: String, päivä: LocalDate = date(2016, 6, 4)): Some[List[IBOppiaineenArviointi]] = {
     Some(List(IBOppiaineenArviointi(predicted = false, arvosana = Koodistokoodiviite(koodiarvo = arvosana, koodistoUri = "arviointiasteikkoib"), Some(päivä))))
   }
+
+  def ibKurssinArviointi(arvosana: String, effort: String, päivä: LocalDate = date(2016, 6, 4)): Some[List[IBKurssinArviointi]] =
+    Some(List(IBKurssinArviointi(
+      arvosana = Koodistokoodiviite(koodiarvo = arvosana,
+      koodistoUri = "arviointiasteikkoib"),
+      effort = Koodistokoodiviite(koodiarvo = effort, koodistoUri = "effortasteikkoib"),
+      päivä = päivä
+    )))
 
   val opiskeluoikeus = IBOpiskeluoikeus(
     oppilaitos = ressunLukio,

@@ -137,7 +137,7 @@ case class IBKurssinSuoritus(
   koulutusmoduuli: IBKurssi,
   tila: Koodistokoodiviite,
   arviointi: Option[List[IBKurssinArviointi]] = None,
-  suorituskieli: Option[Koodistokoodiviite],
+  suorituskieli: Option[Koodistokoodiviite] = None,
   @KoodistoKoodiarvo("ibkurssi")
   tyyppi: Koodistokoodiviite = Koodistokoodiviite(koodiarvo = "ibkurssi", koodistoUri = "suorituksentyyppi")
 ) extends IBSuoritus
@@ -154,8 +154,9 @@ case class IBKurssi(
 ) extends KoodistostaLöytyväKoulutusmoduuli with Valinnaisuus with PreIBKurssi
 
 case class IBKurssinArviointi(
-  //TODO: Effort
   arvosana: Koodistokoodiviite,
+  @KoodistoUri("effortasteikkoib")
+  effort: Koodistokoodiviite,
   @Description("Päivämäärä, jolloin arviointi on annettu. Muoto YYYY-MM-DD")
   päivä: LocalDate
 ) extends IBArviointi with ArviointiPäivämäärällä
